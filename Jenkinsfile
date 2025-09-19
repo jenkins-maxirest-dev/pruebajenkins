@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     stages {
-        stage('Execute on test server') {
+        stage('test server') {
             steps {
                 script {
                     def server = [name: 'test', ip: '34.95.199.71']
