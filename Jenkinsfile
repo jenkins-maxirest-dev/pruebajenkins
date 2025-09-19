@@ -1,22 +1,25 @@
+// Jenkinsfile en la raíz de tu repositorio
+def notifySlack(String message) {
+    // slackSend channel: '#devops', message: message
+}
+
 pipeline {
     agent any
     
+    parameters {
+        string(name: 'BRANCH', defaultValue: 'main', description: 'Branch to build')
+        choice(name: 'DEPLOY_ENV', choices: ['dev', 'test', 'prod'], description: 'Deployment environment')
+    }
+    
     stages {
-        stage('test server') {
+        stage('Checkout') {
             steps {
-                script {
-                    def server = [name: 'test', ip: '34.95.199.71']
-                    def usuario = 'jenkins'
-                    def sshKey = '/home/jenkins/.ssh/id_rsa'
-                    
-                    sh """
-                        ssh -i ${sshKey} \\
-                        -o StrictHostKeyChecking=no \\
-                        ${usuario}@${server.ip} \\
-                        '. /home/gitlabops/testgithub/test-git.sh'
-                    """
-                }
+                git branch: params.BRANCH, 
+                     url: 'https://github.com/tu-usuario/tu-repositorio.git',
+                     credentialsId: 'github-credentials'
             }
         }
+        
+        // ... más stages
     }
 }
